@@ -32,12 +32,15 @@ printUsage(const char* progName)
 
 //************************************
 // Method:    传入三个const指针，返回一个PCLVisualizer指针
+// 通过不同的视口（ViewPort）绘制多个点云
+// 利用不同的搜索半径，基于同一点云计算出对应不同半径的两组法线
 // Returns:   pcl::visualization::PCLVisualizer::Ptr
 // Parameter: pcl::PointCloud<pcl::PointXYZRGB>::ConstPtr cloud
 // Parameter: pcl::PointCloud<pcl::Normal>::ConstPtr normals1
 // Parameter: pcl::PointCloud<pcl::Normal>::ConstPtr normals2
 //************************************
-pcl::visualization::PCLVisualizer::Ptr viewportsVis(pcl::PointCloud<pcl::PointXYZRGB>::ConstPtr cloud,
+pcl::visualization::PCLVisualizer::Ptr viewportsVis(
+	pcl::PointCloud<pcl::PointXYZRGB>::ConstPtr cloud,
 	pcl::PointCloud<pcl::Normal>::ConstPtr normals1,
 	pcl::PointCloud<pcl::Normal>::ConstPtr normals2)
 {
@@ -45,13 +48,41 @@ pcl::visualization::PCLVisualizer::Ptr viewportsVis(pcl::PointCloud<pcl::PointXY
 	// ----------------打开3D视窗，添加点云和法线--------------
 	// --------------------------------------------------------
 	pcl::visualization::PCLVisualizer::Ptr viewer(new pcl::visualization::PCLVisualizer("3D Viewer"));
+	
+	//使用默认值初始化相机参数
 	viewer->initCameraParameters();
 
+
 	int v1(0);
+	//创建视口
+	/**创建一个视口从 [xmin,ymin] 到 [xmax,ymax].
+	* 参数 xmin ：视口在X轴的最小值 (0.0 <= 1.0)
+	* 参数 ymin ：视口在Y轴的最小值 (0.0 <= 1.0)
+	* 参数 xmax ：视口在X轴的最大值 (0.0 <= 1.0)
+	* 参数 ymax： 视口在Y轴的最大值 (0.0 <= 1.0)
+	* 参数 viewport ： 新视口的id，传入的是个引用参数
+	*
+	* 注意：
+	*如果当前窗口不存在渲染器，将创建一个，并且*视口将被设置为0 ('all')。如果一个或多个渲染
+	*器存在，视口ID将被设置为渲染器的总数- 1
+	*/
 	viewer->createViewPort(0.0, 0.0, 0.5, 1.0, v1);
+
+	//设置viewport的背景颜色，第四个参数为指定视口的id，如果不输入，默认为全部视口设置背景颜色
+	//setBackgroundColor(const double &r, const double &g, const double &b, int viewport = 0);
 	viewer->setBackgroundColor(0, 0, 0, v1);
+
+	//为视口添加文本,添加文本有许多重载函数，可以设置颜色字体等属性
+	/*
+	addText (const std::string &text,
+		int xpos, int ypos,
+		const std::string &id = "", int viewport = 0);
+		*/
 	viewer->addText("Radius:0.01", 10, 10, "v1 text", v1);
+
+	//创建一个颜色处理器
 	pcl::visualization::PointCloudColorHandlerRGBField<pcl::PointXYZRGB> rgb(cloud);
+	//为指定的viewport加入点云，颜色处理器，
 	viewer->addPointCloud<pcl::PointXYZRGB>(cloud, rgb, "sample cloud1", v1);
 
 	int v2(0);
@@ -131,7 +162,7 @@ main(int argc, char** argv)
 	// ----------创建示例点云数据----------
 	// ------------------------------------
 	pcl::PointCloud < pcl::PointXYZ > ::Ptr basic_cloud_ptr(new pcl::PointCloud<pcl::PointXYZ>);
-	pcl::PointCloud<pcl::PointXYZRGB>::Ptr point_cloud_ptr(new pcl::PointCloud<pcl::_PointXYZRGB>);
+	pcl::PointCloud<pcl::PointXYZRGB>::Ptr point_cloud_ptr(new pcl::PointCloud<pcl::PointXYZRGB>);
 	std::cout << "Generating example point clouds.\n\n";
 	/*
 	 * 创建一个向z轴挤压的椭圆，颜色由按红绿蓝的顺序渐变
