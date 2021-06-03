@@ -29,6 +29,72 @@ printUsage(const char* progName)
 		<< "-i           Interaction Customization example\n"
 		<< "\n\n";
 }
+//简单显示PointXYZ点云,返回一个视窗的shared智能指针
+pcl::visualization::PCLVisualizer::Ptr simpleVis(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud)
+{
+	//打开3D视窗并添加点云
+	pcl::visualization::PCLVisualizer::Ptr viewer(new pcl::visualization::PCLVisualizer("3D Viewer"));
+	//设置背景颜色为黑色
+	viewer->setBackgroundColor(0, 0, 0);
+
+	/**
+	 * 为视窗添加点云数据，传入一个字符串ID以便在其他方法中识别这个点云数据
+	 * 可以多次调用addPointCloud()函数以添加多个点云数据，每次都提供一个新的ID
+	 * 如果想更新一个已存在的点云数据，你可以调用removePointCloud()，并传入点云的ID使它能够得到更新
+	 * 在PCL1.1及以上版本中，提供了一个新的API方法：updatePointCloud（）
+	 * 使用它就可以直接更新点云，而不用先调用removePointCloud()函数删除再添加
+	 * adddPointCloud()函数有许多重载形式，其他形式可以被用于操作不同类型的点云，显示法线等等
+	 */
+	viewer->addPointCloud<pcl::PointXYZ>(cloud, "sample cloud");
+
+	//改变渲染点的大小，可以使用此方法在视窗中控制任何点云的渲染方式
+	viewer->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 1, "sample cloud");
+	
+	/**
+	 * 查看复杂的点云常常会使我们失去方向感，为了保证对点云位置的正确判断，可以显示一个坐标系
+	 * 它们是沿着X轴（红色），Y轴（绿色），Z轴（蓝色）的三个圆柱体。圆柱体的大小可以通过传入scale参数控制
+	 * 默认scale=1.0
+	 * 该函数也有重载方法，通过传入坐标（x,y,z）可以设置坐标轴的位置
+	 */
+	viewer->addCoordinateSystem(1.0);
+
+	//初始化相机参数，使用户从默认的角度观察点云
+	viewer->initCameraParameters();
+	return (viewer);
+}
+
+//显示rgb点云
+pcl::visualization::PCLVisualizer::Ptr rgbVis(pcl::PointCloud<pcl::PointXYZRGB>::ConstPtr cloud)
+{
+	pcl::visualization::PCLVisualizer::Ptr viewer(new pcl::visualization::PCLVisualizer("3D Viewer"));
+	viewer->setBackgroundColor(0, 0, 0);
+	pcl::visualization::PointCloudColorHandlerRGBField<pcl::PointXYZRGB> rgb(cloud);
+	viewer->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "sample cloud");
+	viewer->addCoordinateSystem(1.0);
+	viewer->initCameraParameters();
+	return (viewer);
+
+}
+
+//
+pcl::visualization::PCLVisualizer::Ptr customColorVis(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud)
+{
+	pcl::visualization::PCLVisualizer::Ptr viewer(new pcl::visualization::PCLVisualizer("3D Viewer"));
+	viewer->setBackgroundColor(0, 0, 0);
+	pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> single_color(cloud, 0, 255, 0);
+	viewer->addPointCloud<pcl::PointXYZ>(cloud, single_color, "sample cloud");
+	viewer->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "sample cloud");
+	viewer->addCoordinateSystem(1.0);
+	viewer->initCameraParameters();
+	return (viewer);
+}
+pcl::visualization::PCLVisualizer::Ptr normalsVis(
+	pcl::PointCloud<pcl::PointXYZRGB>::ConstPtr cloud,
+	pcl::PointCloud<pcl::Normal>::ConstPtr normals
+)
+{
+	
+}
 
 //************************************
 // Method:    传入三个const指针，返回一个PCLVisualizer指针
@@ -96,6 +162,7 @@ pcl::visualization::PCLVisualizer::Ptr viewportsVis(
 	viewer->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "sample cloud2");
 	viewer->addCoordinateSystem(1.0);
 
+	//为点云添加法线，指定viewport显示
 	viewer->addPointCloudNormals<pcl::PointXYZRGB, pcl::Normal>(cloud, normals1, 10, 0.05, "normals1", v1);
 	viewer->addPointCloudNormals<pcl::PointXYZRGB, pcl::Normal>(cloud, normals2, 10, 0.05, "normals2", v2);
 
