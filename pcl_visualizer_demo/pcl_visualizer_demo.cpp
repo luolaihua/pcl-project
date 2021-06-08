@@ -62,12 +62,20 @@ pcl::visualization::PCLVisualizer::Ptr simpleVis(pcl::PointCloud<pcl::PointXYZ>:
 	viewer->initCameraParameters();
 	return (viewer);
 }
-
+/**
+ * 通常，使用最多的点云类型是PointXYZRGB类型，而不是PointXYZ，它还包含了颜色信息
+ * 撇开这个不讲，你也希望通过颜色标注一些特别的点云，使它在视窗中具有辨认性
+ * PCLVisualizer提供这样的性能，为包含颜色信息的点云提供显示，或者为点云分配色彩
+ * 在很多设备中，比如Microsoft Kinect ，都可以产生RGB点云数据
+ * PCLVisualizer可以为每个点云着色并显示
+ */
 //显示rgb点云
 pcl::visualization::PCLVisualizer::Ptr rgbVis(pcl::PointCloud<pcl::PointXYZRGB>::ConstPtr cloud)
 {
 	pcl::visualization::PCLVisualizer::Ptr viewer(new pcl::visualization::PCLVisualizer("3D Viewer"));
 	viewer->setBackgroundColor(0, 0, 0);
+	// 如果点云中没有RGB字段，PCLVisualizer就不知道使用什么颜色
+	// 点类型不一定需要PointRGB类型，只要它有三个颜色字段即可
 	pcl::visualization::PointCloudColorHandlerRGBField<pcl::PointXYZRGB> rgb(cloud);
 	viewer->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "sample cloud");
 	viewer->addCoordinateSystem(1.0);
@@ -93,7 +101,68 @@ pcl::visualization::PCLVisualizer::Ptr normalsVis(
 	pcl::PointCloud<pcl::Normal>::ConstPtr normals
 )
 {
-	
+	pcl::visualization::PCLVisualizer::Ptr viewer(new pcl::visualization::PCLVisualizer("3D Viewer"));
+	viewer->setBackgroundColor(0, 0, 0);
+	pcl::visualization::PointCloudColorHandlerRGBField<pcl::PointXYZRGB> rgb(cloud);
+	//可以传入一个颜色控制器
+	viewer->addPointCloud<pcl::PointXYZRGB>(cloud, rgb, "sample cloud");
+	viewer->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "sample cloud");
+	viewer->addCoordinateSystem(1.0);
+	viewer->initCameraParameters();
+	return (viewer);
+}
+pcl::visualization::PCLVisualizer::Ptr shapesVis(pcl::PointCloud<pcl::PointXYZRGB>::ConstPtr cloud)
+{
+	pcl::visualization::PCLVisualizer::Ptr viewer(new pcl::visualization::PCLVisualizer("3D Viewer"));
+	viewer->setBackgroundColor(0, 0, 0);
+	pcl::visualization::PointCloudColorHandlerRGBField<pcl::PointXYZRGB> rgb(cloud);
+	viewer->addPointCloud<pcl::PointXYZRGB>(cloud, rgb, "sample cloud");
+	viewer->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "sample cloud");
+	viewer->addCoordinateSystem(1.0);
+	viewer->initCameraParameters();
+
+	//---------------------------------------
+	//-----Add shapes at other locations-----
+	//---------------------------------------
+	pcl::ModelCoefficients coeffs;
+	coeffs.values.push_back(0.0);
+	coeffs.values.push_back(0.0);
+	coeffs.values.push_back(1.0);
+	coeffs.values.push_back(0.0);
+	/**  Add a plane from a set of given model coefficients
+	  * \param[in] coefficients the model coefficients (a, b, c, d with ax+by+cz+d=0)
+	  * \param[in] id the plane id/name (default: "plane")
+	  * \param[in] viewport (optional) the id of the new viewport (default: 0)
+	  *
+	  * \code
+	  * // The following are given (or computed using sample consensus techniques)
+	  * // See SampleConsensusModelPlane for more information
+	  * // Eigen::Vector4f plane_parameters;
+	  *
+	  * pcl::ModelCoefficients plane_coeff;
+	  * plane_coeff.values.resize (4);    // We need 4 values
+	  * plane_coeff.values[0] = plane_parameters.x ();
+	  * plane_coeff.values[1] = plane_parameters.y ();
+	  * plane_coeff.values[2] = plane_parameters.z ();
+	  * plane_coeff.values[3] = plane_parameters.w ();
+	  *
+	  * addPlane (plane_coeff);
+	  bool
+		addPlane (const pcl::ModelCoefficients &coefficients,
+				  const std::string &id = "plane",
+				  int viewport = 0);
+	  */
+	viewer->addPlane(coeffs, "plane");
+	coeffs.values.clear();
+	coeffs.values.push_back(0.3);
+	coeffs.values.push_back(0.3);
+	coeffs.values.push_back(0.0);
+	coeffs.values.push_back(0.0);
+	coeffs.values.push_back(1.0);
+	coeffs.values.push_back(0.0);
+	coeffs.values.push_back(5.0);
+	viewer->addCone(coeffs, "cone");
+	return (viewer);
 }
 
 //************************************
