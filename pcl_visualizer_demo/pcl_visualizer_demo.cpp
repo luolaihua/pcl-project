@@ -238,6 +238,56 @@ pcl::visualization::PCLVisualizer::Ptr viewportsVis(
 	return (viewer);
 }
 
+unsigned int text_id = 0;
+void KeyboardEventOccurred(const pcl::visualization::KeyboardEvent &event,
+	void* viewer_void)
+{
+	pcl::visualization::PCLVisualizer *viewer = static_cast<pcl::visualization::PCLVisualizer *> (viewer_void);
+	if (event.getKeySym() == "r" && event.keyDown())
+	{
+		std::cout << "r was pressed => removing all text" << std::endl;
+		char str[512];
+		for (unsigned int i = 0; i < text_id; ++i)
+		{
+			sprintf(str, "text#%03d", i);
+		}
+		text_id = 0;
+	}
+}
+void mouseEventOccurred(const pcl::visualization::MouseEvent &event, void *viewer_void)
+{
+	pcl::visualization::PCLVisualizer *viewer = static_cast<pcl::visualization::PCLVisualizer*> (viewer_void);
+	if (event.getButton() == pcl::visualization::MouseEvent::LeftButton &&
+		event.getType() == pcl::visualization::MouseEvent::MouseButtonRelease)
+	{
+		std::cout << "Left mouse button released at position (" << event.getX() << ", "
+			<< event.getY() << ")" << std::endl;
+		char str[512];
+		sprintf(str, "text#%03d", text_id++);
+		viewer->addText("clicked here", event.getX(), event.getY(), str);
+	}
+}
+pcl::visualization::PCLVisualizer::Ptr interactionCustomizationVis()
+{
+	pcl::visualization::PCLVisualizer::Ptr viewer(new pcl::visualization::PCLVisualizer("3D Viewer"));
+	viewer->setBackgroundColor(0, 0, 0);
+	viewer->addCoordinateSystem(1.0);
+	/**
+	 *  /** 为键盘事件注册一个回调函数
+		  * callback  传入一个函数指针，这个函数将成为键盘事件的回调函数
+		  * cookie    传入的用户数据，用无类型指针表示
+		  * return 返回一个连接对象，可以通过这个对象断开回调函数.
+
+	inline boost::signals2::connection
+		registerKeyboardCallback(void(*callback) (const pcl::visualization::KeyboardEvent&, void*), void* cookie = NULL)
+	{
+		return (registerKeyboardCallback(boost::bind(callback, _1, cookie)));
+	}
+	 */
+	viewer->registerKeyboardCallback(KeyboardEventOccurred, (void*)viewer.get());
+	viewer->registerMouseCallback(mouseEventOccurred, (void*)viewer.get());
+	return (viewer);
+}
 // ----------------
 // -----主函数-----
 // ----------------
@@ -358,9 +408,33 @@ main(int argc, char** argv)
 	ne.compute(*cloud_normals2);
 
 	pcl::visualization::PCLVisualizer::Ptr viewer;
-	if (viewports)
+	if (simple)
+	{
+		viewer = simpleVis(basic_cloud_ptr);
+	}
+	else if (rgb)
+	{
+		viewer = rgbVis(point_cloud_ptr);
+	}
+	else if (custom_c)
+	{
+		viewer = customColorVis(basic_cloud_ptr);
+	}
+	else if (normals)
+	{
+		viewer = normalsVis(point_cloud_ptr, cloud_normals2);
+	}
+	else if (shapes)
+	{
+		viewer = shapesVis(point_cloud_ptr);
+	}
+	else if (viewports)
 	{
 		viewer = viewportsVis(point_cloud_ptr, cloud_normals1, cloud_normals2);
+	}
+	else if (interaction_customization)
+	{
+		viewer = interactionCustomizationVis();
 	}
 	//--------------------
 	// -----Main loop-----
