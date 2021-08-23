@@ -45,12 +45,22 @@ void viewerPsycho(pcl::visualization::PCLVisualizer& viewer)
 	user_data++;
 }
 
-int main()
+int main(int argc, char** argv)
 {
 	//加载点云文件到点云对象
 	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZ>);
-	pcl::io::loadPCDFile("maize.pcd", *cloud);
-
+	if(argc < 2)
+	{
+		pcl::io::loadPCDFile("maize.pcd", *cloud);
+	}
+	else
+	{
+		if (pcl::io::loadPCDFile <pcl::PointXYZ>(argv[1], *cloud) == -1)
+		{
+			std::cout << "Cloud reading failed." << std::endl;
+			return (-1);
+		}// 加载输入点云数据
+	}
 	//创建viewer对象
 	pcl::visualization::CloudViewer viewer("My Cloud Viewer");//传入的字符串为窗口的名字
 	//showCloud是同步的，在此处等待直到渲染显示为止
