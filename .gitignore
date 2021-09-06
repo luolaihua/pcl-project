@@ -1,0 +1,4 @@
+# ignore txt files
+*.txt
+# ignore cmake_bin dir
+**/cmake_bin
