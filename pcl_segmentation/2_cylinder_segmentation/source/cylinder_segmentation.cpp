@@ -149,6 +149,7 @@ main(int argc, char** argv)
 	//viewer.setBackgroundColor(0, 0, 255);
 	viewer.addText(str+ std::to_string(step_count), 10, 10,16, 200,200,100,"text");
 	
+	//注册键盘回调函数，按下空格键将显示下一个点云处理结果
 	viewer.registerKeyboardCallback(&keyboard_event_occurred, (void*)NULL);
 
 
@@ -191,28 +192,22 @@ main(int argc, char** argv)
 			switch (step_count)
 			{
 			case 2:
-				//滤波去噪
-				//pass_through_filter();	
+				//滤波去噪	
 				viewer.updatePointCloud(cloud_filtered, "cloud"); break;
 			case 3:
 				//法线估计
-				//normals_estimate();
-				plane_seg();break;
+				break;
 			case 4:
 				//利用平面点云的下标将平面抽取出来，并保存
-				//get_plane();
 				viewer.updatePointCloud(cloud_plane, "cloud"); break;
 			case 5:
 				//移除平面及其法线，将结果保存在cloud_filtered2，cloud_normals2
-				//remove_plane();
 				viewer.updatePointCloud(cloud_filtered2, "cloud"); break;
 			case 6:
 				// 将圆柱分割出来，得到系数因子和下标
-				cylinder_seg(); 
 				break;
 			case 7:
 				//// 将圆柱抽取并保存
-				//get_cylinder();
 				viewer.updatePointCloud(cloud_cylinder, "cloud"); break;
 			default:
 				break;
