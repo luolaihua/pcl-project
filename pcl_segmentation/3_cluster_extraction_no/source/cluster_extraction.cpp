@@ -113,7 +113,7 @@ main(int argc, char** argv)
 	ec.setInputCloud(cloud_filtered);
 	//聚类抽取结果保存在一个数组中，数组中每个元素代表抽取的一个组件点云的下标
 	ec.extract(cluster_indices);
-
+	
 	//遍历抽取结果，将其显示并保存
 	int j = 0;
 	for (std::vector<pcl::PointIndices>::const_iterator it = cluster_indices.begin(); it != cluster_indices.end(); ++it)
