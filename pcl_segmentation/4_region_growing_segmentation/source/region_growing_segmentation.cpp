@@ -16,38 +16,38 @@
 #include <psapi.h>
 void PrintMemoryInfo( )
 {
-    HANDLE hProcess;
-    PROCESS_MEMORY_COUNTERS pmc;
+	HANDLE hProcess;
+	PROCESS_MEMORY_COUNTERS pmc;
 
 	hProcess=GetCurrentProcess();
-    printf( "\nProcess ID: %u\n", hProcess );
+	printf( "\nProcess ID: %u\n", hProcess );
 
-    // Print information about the memory usage of the process.
+	// Print information about the memory usage of the process.
 	//输出进程使用的内存信息
    
-    if (NULL == hProcess)
-        return;
+	if (NULL == hProcess)
+		return;
 
-    if ( GetProcessMemoryInfo( hProcess, &pmc, sizeof(pmc)) )
-    {
-        printf( "\tPageFaultCount: 0x%08X\n", pmc.PageFaultCount );
-        printf( "\tPeakWorkingSetSize: 0x%08X\n", 
-                  pmc.PeakWorkingSetSize );
-        printf( "\tWorkingSetSize: 0x%08X\n", pmc.WorkingSetSize );
-        printf( "\tQuotaPeakPagedPoolUsage: 0x%08X\n", 
-                  pmc.QuotaPeakPagedPoolUsage );
-        printf( "\tQuotaPagedPoolUsage: 0x%08X\n", 
-                  pmc.QuotaPagedPoolUsage );
-        printf( "\tQuotaPeakNonPagedPoolUsage: 0x%08X\n", 
-                  pmc.QuotaPeakNonPagedPoolUsage );
-        printf( "\tQuotaNonPagedPoolUsage: 0x%08X\n", 
-                  pmc.QuotaNonPagedPoolUsage );
-        printf( "\tPagefileUsage: 0x%08X\n", pmc.PagefileUsage ); 
-        printf( "\tPeakPagefileUsage: 0x%08X\n", 
-                  pmc.PeakPagefileUsage );
-    }
+	if ( GetProcessMemoryInfo( hProcess, &pmc, sizeof(pmc)) )
+	{
+		printf( "\tPageFaultCount: 0x%08X\n", pmc.PageFaultCount );
+		printf( "\tPeakWorkingSetSize: 0x%08X\n", 
+				  pmc.PeakWorkingSetSize );
+		printf( "\tWorkingSetSize: 0x%08X\n", pmc.WorkingSetSize );
+		printf( "\tQuotaPeakPagedPoolUsage: 0x%08X\n", 
+				  pmc.QuotaPeakPagedPoolUsage );
+		printf( "\tQuotaPagedPoolUsage: 0x%08X\n", 
+				  pmc.QuotaPagedPoolUsage );
+		printf( "\tQuotaPeakNonPagedPoolUsage: 0x%08X\n", 
+				  pmc.QuotaPeakNonPagedPoolUsage );
+		printf( "\tQuotaNonPagedPoolUsage: 0x%08X\n", 
+				  pmc.QuotaNonPagedPoolUsage );
+		printf( "\tPagefileUsage: 0x%08X\n", pmc.PagefileUsage ); 
+		printf( "\tPeakPagefileUsage: 0x%08X\n", 
+				  pmc.PeakPagefileUsage );
+	}
 
-    CloseHandle( hProcess );
+	CloseHandle( hProcess );
 }
 
 using namespace pcl::console;
@@ -139,7 +139,7 @@ main (int argc, char** argv)
 	*/
 	PrintMemoryInfo();
 	pcl::PointCloud <pcl::PointXYZRGB>::Ptr colored_cloud = reg.getColoredCloud ();
-	pcl::visualization::CloudViewer viewer ("点云库PCL学习教程第二版-区域增长分割方法");
+	pcl::visualization::CloudViewer viewer ("区域增长分割方法");
 	viewer.showCloud(colored_cloud);
 	while (!viewer.wasStopped ())
 	{
