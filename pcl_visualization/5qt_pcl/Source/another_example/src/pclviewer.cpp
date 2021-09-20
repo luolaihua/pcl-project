@@ -27,7 +27,7 @@ PCLViewer::PCLViewer (QWidget *parent) :
 
   // Set up the QVTK window
   viewer_.reset (new pcl::visualization::PCLVisualizer ("viewer", false));
-  viewer_->setBackgroundColor (255, 255, 255);
+  //viewer_->setBackgroundColor (255, 255, 255);
   ui->qvtkWidget->SetRenderWindow (viewer_->getRenderWindow ());
   viewer_->setupInteractor (ui->qvtkWidget->GetInteractor (), ui->qvtkWidget->GetRenderWindow ());
   ui->qvtkWidget->update ();
