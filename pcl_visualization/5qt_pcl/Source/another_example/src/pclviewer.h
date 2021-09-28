@@ -1,4 +1,4 @@
-#ifndef PCLVIEWER_H
+﻿#ifndef PCLVIEWER_H
 #define PCLVIEWER_H
 
 // Qt
@@ -24,22 +24,22 @@ typedef pcl::PointCloud<PointT> PointCloudT;
 
 namespace Ui
 {
-  class PCLViewer_UI;
+class PCLViewer_UI;
 }
 
 class PCLViewer : public QMainWindow
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /** @brief Constructor */
     explicit
-    PCLViewer (QWidget *parent = 0);
+        PCLViewer (QWidget *parent = 0);
 
     /** @brief Destructor */
     ~PCLViewer ();
 
-  public slots:
+public slots:
     /** @brief Triggered whenever the "Save file" button is clicked */
     void
     saveFileButtonPressed ();
@@ -56,7 +56,7 @@ class PCLViewer : public QMainWindow
     void
     lookUpTableChosen ();
 
-  protected:
+protected:
     /** @brief The PCL visualizer object */
     boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer_;
 
@@ -85,7 +85,7 @@ class PCLViewer : public QMainWindow
     void
     colorCloudDistances ();
 
-  private:
+private:
     /** @brief ui pointer */
     Ui::PCLViewer_UI *ui;
 };

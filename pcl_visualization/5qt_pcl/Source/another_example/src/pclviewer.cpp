@@ -1,4 +1,4 @@
-#include "pclviewer.h"
+ï»¿#include "pclviewer.h"
 #include "../cmake_bin/ui_pclviewer.h"
 
 PCLViewer::PCLViewer (QWidget *parent) :
@@ -9,13 +9,13 @@ PCLViewer::PCLViewer (QWidget *parent) :
 {
   ui->setupUi (this);
    QString str;
-  str = str.fromLocal8Bit("µãÔÆ¿âPCLÑ§Ï°½Ì³ÌµÚ¶þ°æ-Qt+PCL½çÃæ¿ª·¢°¸Àý");
+  str = str.fromLocal8Bit("QT+PCL");
   this->setWindowTitle (str);
 
   // Setup the cloud pointer
   cloud_.reset (new PointCloudT);
   // The number of points in the cloud
-  cloud_->resize (500);
+  cloud_->resize (1000);
 
   // Fill the cloud with random points
   for (size_t i = 0; i < cloud_->points.size (); ++i)
@@ -27,7 +27,8 @@ PCLViewer::PCLViewer (QWidget *parent) :
 
   // Set up the QVTK window
   viewer_.reset (new pcl::visualization::PCLVisualizer ("viewer", false));
-  //viewer_->setBackgroundColor (255, 255, 255);
+  viewer_->setBackgroundColor (255, 255, 255);
+
   ui->qvtkWidget->SetRenderWindow (viewer_->getRenderWindow ());
   viewer_->setupInteractor (ui->qvtkWidget->GetInteractor (), ui->qvtkWidget->GetRenderWindow ());
   ui->qvtkWidget->update ();
@@ -51,6 +52,8 @@ PCLViewer::PCLViewer (QWidget *parent) :
   colorCloudDistances ();
 
   viewer_->addPointCloud (cloud_, "cloud");
+  viewer_->setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE,100.0);
+  viewer_->addCoordinateSystem (100);
   viewer_->resetCamera ();
   ui->qvtkWidget->update ();
 }

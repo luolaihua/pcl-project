@@ -6,7 +6,7 @@ PCLViewer::PCLViewer (QWidget *parent) :
 	  ui (new Ui::main_window)
 {
   ui->setupUi (this);
-    QString str;
+	QString str;
   str = str.fromLocal8Bit("点云库PCL学习教程第二版-Qt+PCL界面开发案例");
   this->setWindowTitle (str);
   // Setup the cloud pointer
@@ -22,13 +22,13 @@ PCLViewer::PCLViewer (QWidget *parent) :
   // Fill the cloud with some points
   for (size_t i = 0; i < cloud->points.size (); ++i)
   {
-    cloud->points[i].x = 1024 * rand () / (RAND_MAX + 1.0f);
-    cloud->points[i].y = 1024 * rand () / (RAND_MAX + 1.0f);
-    cloud->points[i].z = 1024 * rand () / (RAND_MAX + 1.0f);
+	cloud->points[i].x = 1024 * rand () / (RAND_MAX + 1.0f);
+	cloud->points[i].y = 1024 * rand () / (RAND_MAX + 1.0f);
+	cloud->points[i].z = 1024 * rand () / (RAND_MAX + 1.0f);
 
-    cloud->points[i].r = red;
-    cloud->points[i].g = green;
-    cloud->points[i].b = blue;
+	cloud->points[i].r = red;
+	cloud->points[i].g = green;
+	cloud->points[i].b = blue;
   }
 
   // Set up the QVTK window
@@ -66,9 +66,9 @@ PCLViewer::randomButtonPressed ()
   // Set the new color
   for (size_t i = 0; i < cloud->size(); i++)
   {
-    cloud->points[i].r = 255 *(1024 * rand () / (RAND_MAX + 1.0f));
-    cloud->points[i].g = 255 *(1024 * rand () / (RAND_MAX + 1.0f));
-    cloud->points[i].b = 255 *(1024 * rand () / (RAND_MAX + 1.0f));
+	cloud->points[i].r = 255 *(1024 * rand () / (RAND_MAX + 1.0f));
+	cloud->points[i].g = 255 *(1024 * rand () / (RAND_MAX + 1.0f));
+	cloud->points[i].b = 255 *(1024 * rand () / (RAND_MAX + 1.0f));
   }
 
   viewer->updatePointCloud (cloud, "cloud");
@@ -81,9 +81,9 @@ PCLViewer::RGBsliderReleased ()
   // Set the new color
   for (size_t i = 0; i < cloud->size (); i++)
   {
-    cloud->points[i].r = red;
-    cloud->points[i].g = green;
-    cloud->points[i].b = blue;
+	cloud->points[i].r = red;
+	cloud->points[i].g = green;
+	cloud->points[i].b = blue;
   }
   viewer->updatePointCloud (cloud, "cloud");
   ui->qvtkWidget->update ();
