@@ -2,15 +2,15 @@
 #define PCLVIEWER_H
 
 // Qt
-#include <QMainWindow>
+#include <QDebug>
 #include <QFileDialog>
-
+#include <QMainWindow>
 // Point Cloud Library
+#include <pcl/filters/filter.h>
+#include <pcl/io/pcd_io.h>
+#include <pcl/io/ply_io.h>
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
-#include <pcl/io/ply_io.h>
-#include <pcl/io/pcd_io.h>
-#include <pcl/filters/filter.h>
 #include <pcl/visualization/pcl_visualizer.h>
 
 // Boost
@@ -22,41 +22,34 @@
 typedef pcl::PointXYZRGBA PointT;
 typedef pcl::PointCloud<PointT> PointCloudT;
 
-namespace Ui
-{
-class PCLViewer_UI;
+namespace Ui {
+    class PCLViewer_UI;
 }
 
-class PCLViewer : public QMainWindow
-{
+class PCLViewer : public QMainWindow {
     Q_OBJECT
 
-public:
+  public:
     /** @brief Constructor */
-    explicit
-        PCLViewer (QWidget *parent = 0);
+    explicit PCLViewer(QWidget* parent = 0);
 
     /** @brief Destructor */
-    ~PCLViewer ();
+    ~PCLViewer();
 
-public slots:
+  public slots:
     /** @brief Triggered whenever the "Save file" button is clicked */
-    void
-    saveFileButtonPressed ();
+    void saveFileButtonPressed();
 
     /** @brief Triggered whenever the "Load file" button is clicked */
-    void
-    loadFileButtonPressed ();
+    void loadFileButtonPressed();
 
     /** @brief Triggered whenever a button in the "Color on axis" group is clicked */
-    void
-    axisChosen ();
+    void axisChosen();
 
     /** @brief Triggered whenever a button in the "Color mode" group is clicked */
-    void
-    lookUpTableChosen ();
+    void lookUpTableChosen();
 
-protected:
+  protected:
     /** @brief The PCL visualizer object */
     boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer_;
 
@@ -82,12 +75,11 @@ protected:
      * @warning If there's an outlier in the data the color may seem uniform because of this outlier!
      * @note A boost rounding exception error will be thrown if used with a non dense point cloud
      */
-    void
-    colorCloudDistances ();
+    void colorCloudDistances();
 
-private:
+  private:
     /** @brief ui pointer */
-    Ui::PCLViewer_UI *ui;
+    Ui::PCLViewer_UI* ui;
 };
 
-#endif // PCLVIEWER_H
+#endif  // PCLVIEWER_H
