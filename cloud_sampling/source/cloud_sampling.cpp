@@ -76,7 +76,7 @@ int main(int argc, char** argv)
 	pcl::PointCloud<pcl::PointXYZ>::Ptr up_sampling_cloud(new pcl::PointCloud<pcl::PointXYZ>);
 	if(argc < 2)
 	{
-		pcl::io::loadPCDFile<pcl::PointXYZ>("D:\\PCLProject\\cloud_sampling\\cmake_bin\\Debug\\bunny.pcd", *cloud);
+		pcl::io::loadPCDFile<pcl::PointXYZ>("E:\\BaiduNetdiskWorkspace\\Paper-of-Luo\\PCDFiles\\bunny.pcd", *cloud);
 	}
 	else
 	{
